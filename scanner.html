@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Anticheat.ac Scanner</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: #f4f7fb;
+      background: #070b14;
+      font-family: Arial, sans-serif;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      padding: 22px 7%;
+      border-bottom: 1px solid #263753;
+    }
+
+    .logo {
+      color: #3b9cff;
+      font-size: 22px;
+      font-weight: bold;
+    }
+
+    .status {
+      color: #35e09b;
+    }
+
+    main {
+      width: min(1000px, 92%);
+      margin: 55px auto;
+    }
+
+    h1 {
+      font-size: clamp(35px, 6vw, 64px);
+    }
+
+    h1 span {
+      color: #3b9cff;
+    }
+
+    p {
+      color: #91a0b8;
+      line-height: 1.6;
+    }
+
+    .dashboard {
+      display: grid;
+      grid-template-columns: 1.4fr 1fr;
+      gap: 22px;
+    }
+
+    .card {
+      padding: 28px;
+      border: 1px solid #263753;
+      border-radius: 18px;
+      background: #101827;
+      box-shadow: 0 20px 50px #0005;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 7px 11px;
+      border-radius: 20px;
+      color: #35e09b;
+      background: #123025;
+      font-size: 12px;
+    }
+
+    .checks {
+      display: grid;
+      gap: 12px;
+      margin: 22px 0;
+    }
+
+    .check {
+      display: flex;
+      justify-content: space-between;
+      padding: 14px;
+      border-radius: 10px;
+      color: #91a0b8;
+      background: #172238;
+    }
+
+    .check strong {
+      color: #35e09b;
+      font-weight: normal;
+    }
+
+    button {
+      width: 100%;
+      padding: 15px;
+      border: 0;
+      border-radius: 10px;
+      color: white;
+      background: #3b9cff;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #237edb;
+    }
+
+    button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .progress {
+      display: none;
+      height: 10px;
+      margin-top: 20px;
+      overflow: hidden;
+      border-radius: 20px;
+      background: #26344c;
+    }
+
+    .progress-bar {
+      width: 0;
+      height: 100%;
+      background: #3b9cff;
+      transition: width 0.3s;
+    }
+
+    #result {
+      display: none;
+      margin-top: 20px;
+      padding: 18px;
+      border-radius: 12px;
+      white-space: pre-line;
+      line-height: 1.6;
+    }
+
+    footer {
+      padding: 25px;
+      color: #91a0b8;
+      text-align: center;
+      font-size: 13px;
+    }
+
+    @media (max-width: 750px) {
+      .dashboard {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <div class="logo">ANTICHEAT.AC</div>
+    <div class="status">● Scanner online</div>
+  </header>
+
+  <main>
+    <h1>Fair play starts with <span>trust.</span></h1>
+
+    <p>
+      Επίλεξε έναν φάκελο για έλεγχο. Η ιστοσελίδα δεν κάνει κρυφή
+      πρόσβαση σε αρχεία ή εφαρμογές.
+    </p>
+
+    <section class="dashboard">
+      <div class="card">
+        <div class="badge">SECURE SCANNER</div>
+
+        <h2>Έλεγχος συστήματος</h2>
+
+        <p>
+          Ο έλεγχος πραγματοποιείται μόνο στα αρχεία που θα επιλέξεις.
+        </p>
+
+        <div class="checks">
+          <div class="check">
+            Browser environment
+            <strong>Ready</strong>
+          </div>
+
+          <div class="check">
+            Privacy protection
+            <strong>Enabled</strong>
+          </div>
+        </div>
+
+        <input
+          id="folderInput"
+          type="file"
+          webkitdirectory
+          multiple
+          hidden
+        >
+
+        <button id="scanButton">
+          Επιλογή φακέλου και έναρξη σάρωσης
+        </button>
+
+        <div class="progress" id="progress">
+          <div class="progress-bar" id="progressBar"></div>
+        </div>
+
+        <div id="result"></div>
+      </div>
+
+      <div class="card">
+        <h2>Πώς λειτουργεί;</h2>
+        <p>
+          1. Πατάς το κουμπί.<br><br>
+          2. Επιλέγεις έναν φάκελο.<br><br>
+          3. Ελέγχονται τα ονόματα των αρχείων.
+        </p>
+
+        <p>
+          Η web σελίδα δεν μπορεί να διαβάσει κρυφά ολόκληρο τον υπολογιστή.
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    © 2026 Anticheat.ac — Privacy first
+  </footer>
+
+  <script>
+    const folderInput = document.getElementById("folderInput");
+    const scanButton = document.getElementById("scanButton");
+    const progress = document.getElementById("progress");
+    const progressBar = document.getElementById("progressBar");
+    const result = document.getElementById("result");
+
+    const suspiciousNames = [
+      "cheat.exe",
+      "hack.exe",
+      "injector.exe",
+      "trainer.exe",
+      "aimbot.exe",
+      "wallhack.exe"
+    ];
+
+    scanButton.addEventListener("click", () => {
+      folderInput.click();
+    });
+
+    folderInput.addEventListener("change", async () => {
+      const files = Array.from(folderInput.files);
+
+      if (files.length === 0) {
+        return;
+      }
+
+      scanButton.disabled = true;
+      scanButton.textContent = "Γίνεται σάρωση...";
+      progress.style.display = "block";
+      result.style.display = "none";
+
+      for (let value = 0; value <= 100; value += 20) {
+        progressBar.style.width = `${value}%`;
+        await new Promise(resolve => setTimeout(resolve, 250));
+      }
+
+      const detected = files.filter(file => {
+        return suspiciousNames.includes(file.name.toLowerCase());
+      });
+
+      result.style.display = "block";
+
+      if (detected.length > 0) {
+        result.style.color = "#ff7777";
+        result.style.background = "#35191d";
+        result.textContent =
+          "⚠️ DETECTED CHEATS ON YOUR PC\n\n" +
+          detected
+            .map(file => file.webkitRelativePath || file.name)
+            .join("\n");
+      } else {
+        result.style.color = "#35e09b";
+        result.style.background = "#123025";
+        result.textContent =
+          "✓ NO CHEATS DETECTED\n\n" +
+          `Ελέγχθηκαν ${files.length} αρχεία.`;
+      }
+
+      scanButton.disabled = false;
+      scanButton.textContent = "Νέα σάρωση";
+    });
+  </script>
+</body>
+</html>
